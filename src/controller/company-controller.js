@@ -83,7 +83,7 @@ exports.get_company_by_id = async (req, res) => {
 };
 
 // update company--------------------------
-exports.update_company = async (req, res) => {
+exports.update_company_by_id= async (req, res) => {
   // const objValidation =  new niv.Validator(req.body,{
   //     companyId:"required",
   // });
@@ -96,7 +96,7 @@ exports.update_company = async (req, res) => {
   //   });
   // }
   try {
-    const update_company = await CompanyModel.findByIdAndUpdate(
+    const update_company= await CompanyModel.findByIdAndUpdate(
       req.params.id, req.body,
       { new: true }
     );
@@ -108,7 +108,6 @@ exports.update_company = async (req, res) => {
   } catch (error) {
     return res.status(500).send({
       message: "sorry! Company data not updated successfully",
-      data: null,
       success: false,
     });
   };
