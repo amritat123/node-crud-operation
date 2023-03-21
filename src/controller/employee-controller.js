@@ -1,16 +1,18 @@
 // Employee controller ------------------
 const EmployeeModel = require("../model/employee-model");
 const mongoose = require("mongoose");
+var bcrypt = require("bcrypt");
 const niv = require("node-input-validator");
 
 // Register Employee -----------------------
 exports.registerEmployee = async (req, res) => {
-  let objValidation =  new niv.Validator(req.body, {
+  let objValidation = new niv.Validator(req.body, {
     name: "required|maxLength:60",
     email: "required",
     password: "required|maxLength:60",
   });
   const match = await objValidation.check();
+  console.log(match);
   if (!match) {
     return res.status(404).send({
       message: "validation error",
@@ -35,6 +37,7 @@ exports.registerEmployee = async (req, res) => {
         success: true,
       });
     } catch (error) {
+        console.log(error);
       return res.status(500).send({
         message: "Failed to register please try again later",
         success: false,
