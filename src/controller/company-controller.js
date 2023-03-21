@@ -24,8 +24,8 @@ exports.add_company = async (req, res) => {
     });
   }
   if (match) {
-try {
-      const company =  new CompanyModel({
+    try {
+      const company = new CompanyModel({
         company_name: req.body.company_name,
         company_email: req.body.company_email,
         company_phone: req.body.company_phone,
@@ -36,7 +36,7 @@ try {
       await company.save();
       return res.status(200).send({
         message: "Company added successfully",
-        success: true
+        success: true,
       });
     } catch (error) {
       return res.status(500).send({
@@ -59,12 +59,12 @@ exports.get_company = async (req, res) => {
   } catch (error) {
     return res.status(500).send({
       message: "sorry! Company not fetched",
-      success: false
+      success: false,
     });
   }
 };
 
-// get company by id ----------------------------
+// get company by ID ----------------------------
 exports.get_company_by_id = async (req, res) => {
   try {
     const get_company_by_id = await CompanyModel.findById(req.params.id);
@@ -82,8 +82,8 @@ exports.get_company_by_id = async (req, res) => {
   }
 };
 
-// update company--------------------------
-exports.update_company_by_id= async (req, res) => {
+// update company by ID --------------------------
+exports.update_company_by_id = async (req, res) => {
   // const objValidation =  new niv.Validator(req.body,{
   //     companyId:"required",
   // });
@@ -96,8 +96,9 @@ exports.update_company_by_id= async (req, res) => {
   //   });
   // }
   try {
-    const update_company= await CompanyModel.findByIdAndUpdate(
-      req.params.id, req.body,
+    const update_company = await CompanyModel.findByIdAndUpdate(
+      req.params.id,
+      req.body,
       { new: true }
     );
     return res.status(200).send({
@@ -110,24 +111,22 @@ exports.update_company_by_id= async (req, res) => {
       message: "sorry! Company data not updated successfully",
       success: false,
     });
-  };
+  }
 };
-
-// Delete company by id --------------------------
+// Delete company by ID --------------------------
 exports.delete_company_by_id = async (req, res) => {
-    try {
-      const _id = req.params.id;
-      await CompanyModel.findByIdAndDelete(req.params.id)
-  
-      res.status(200).send({
-        message: "company data deleted successfully",
-        success: true
-      });
-  
-    } catch (error) {
-      return res.status(400).json({ 
-        message:"company data not deleted",
-        success: false,
-      });
-    }
-  };
+  try {
+    const _id = req.params.id;
+    await CompanyModel.findByIdAndDelete(req.params.id);
+
+    res.status(200).send({
+      message: "company data deleted successfully",
+      success: true,
+    });
+  } catch (error) {
+    return res.status(400).json({
+      message: "company data not deleted",
+      success: false,
+    });
+  }
+};
