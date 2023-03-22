@@ -14,8 +14,7 @@ mongoose.connect(uri, {useUnifiedTopology: true })
     })
 
     .catch(err => {
-        console.log(err, "Not Connecting to MongoDB")
+        console.log(err, "Not Connected to MongoDB")
     });
-
 
 module.exports = client;
