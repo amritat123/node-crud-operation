@@ -37,11 +37,41 @@ exports.registerEmployee = async (req, res) => {
         success: true,
       });
     } catch (error) {
-        console.log(error);
+      console.log(error);
       return res.status(500).send({
         message: "Failed to register please try again later",
         success: false,
       });
     }
   }
+};
+
+// Login Employee -----------------------
+exports.loginEmployee = async (req, res) => {
+    let objValidation  = niv.Validator({
+        email: "required|email",
+        password: "required",
+    })
+    const match = await objValidation.check();
+    if (!match) {
+        return res.status(404).send({
+            message: "validation error",
+            success: false,
+        });
+    }
+    if (match) {
+        try {
+            let employee = await EmployeeModel.findOne({email: req.body.email});
+        if (!employee) {
+            return res.status(404).send({
+                message: "Employee not found",
+                success: false,
+            });
+        }
+        
+        } catch (error) {
+            
+        }
+    }
+
 };
