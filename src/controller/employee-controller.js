@@ -23,50 +23,50 @@ exports.registerEmployee = async (req, res) => {
     // confirm the password
     const password = req.body.password;
     const confirmPassword = req.body.confirmPassword;
-    if (password != confirmPassword ) {
+    if (password != confirmPassword) {
       return res.status(404).send({
         message: "password does not match please re-enter password",
-        success: false
-      });
-    }
-  }
-    try {
-      let employee = await EmployeeModel.findOne({
-        email: req.body.email
-      });
-      if (employee) {
-        return res.status(404).send({
-          message: "employee already exists",
-          success: false,
-        });
-      }
-      let hash = "";
-      if(req.body.password){
-        hash = await bcrypt.hash(req.body.password, 10);  
-      }
-      const newEmployee = new EmployeeModel({
-        name: req.body.name,
-        email: req.body.email,
-        password: hash,
-        phone: req.body.phone,
-        address: req.body.address,
-        role: 'employee',
-      });
-
-      const result = await newEmployee.save();
-
-      return res.status(200).send({
-        message: "Employee registered successfully",
-        success: true,
-        data: result
-      });
-    } catch (error) {
-      console.log(error);
-      return res.status(500).send({
-        message: "Failed to register please try again later",
         success: false,
       });
     }
+  }
+  try {
+    let employee = await EmployeeModel.findOne({
+      email: req.body.email,
+    });
+    if (employee) {
+      return res.status(404).send({
+        message: "employee already exists",
+        success: false,
+      });
+    }
+    let hash = "";
+    if (req.body.password) {
+      hash = await bcrypt.hash(req.body.password, 10);
+    }
+    const newEmployee = new EmployeeModel({
+      name: req.body.name,
+      email: req.body.email,
+      password: hash,
+      phone: req.body.phone,
+      address: req.body.address,
+      role: "employee",
+    });
+
+    const result = await newEmployee.save();
+
+    return res.status(200).send({
+      message: "Employee registered successfully",
+      success: true,
+      data: result,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send({
+      message: "Failed to register please try again later",
+      success: false,
+    });
+  }
 };
 
 // Login Employee -----------------------
@@ -86,43 +86,43 @@ exports.loginEmployee = async (req, res) => {
     try {
       // check if the employee exists
       const result = await EmployeeModel.findOne({ email: req.body.email });
-      // console.log(employee);
-      // if (!employee[0]) {
-      //   return res.status(404).json({
-      //     message: "employee not found",
-      //     success: false,
-      //   });
-      // }
+      console.log(result);
+      if (!result ) {
+        return res.status(404).json({
+          message: "employee not found",
+          success: false,
+        });
+      }
       if (result) {
         // check if the password is correct
         const checkPassword = await bcrypt.compare(
           req.body.password,
           result.password
         );
-        console.log(checkPassword)
+        // console.log(checkPassword)
         if (!checkPassword) {
           return res.status(401).send({
             message: "Invalid password",
-            success: false
+            success: false,
           });
         }
       }
       // Generating the user with  token
-              // const token = jwt.sign(
-              //   {
-              //     email: user[0].email,
-              //     id: user[0]._id,
-              //   },
-              //   // process.env.JWT_SECRET,
-              //   {
-              //     expiresIn: "10d",
-              //   }
-              // );
-              // return res.status(200).send({
-              //   message: "login successful",
-              //   success: true,
-              //   token: token,
-              // });
+      const token = jwt.sign(
+        {
+          email: result.email,
+          id: result._id,
+        },
+        process.env.jwt_key,
+        {
+          expiresIn: "10d",
+        }
+      );
+      return res.status(200).send({
+        message: "login successful",
+        success: true,
+        token: token,
+      });
     } catch (error) {
       console.log(error);
       res.status(400).json({
@@ -130,5 +130,5 @@ exports.loginEmployee = async (req, res) => {
         success: false,
       });
     }
-  }
+  };
 };

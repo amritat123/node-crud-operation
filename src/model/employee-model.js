@@ -20,7 +20,7 @@ const employeeSchema = new mongoose.Schema({
     role:{
         type: String,
         // required: true,
-        enum: ["Employee" , "Admin"]
+        enum: ["employee" , "admin"]
     },
     date:{
         type: Date,
